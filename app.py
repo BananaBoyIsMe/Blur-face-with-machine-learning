@@ -11,14 +11,14 @@ detector = MTCNN()
 detected_faces = []
 blurred_faces = set()
 original_image = None
-blurred_image = None  # Store a version with only blurring (no boxes)
+blurred_image = None 
 
 # Function to detect faces
 def detect_faces(image):
     global detected_faces, original_image, blurred_faces, blurred_image
     image = np.array(image)
     original_image = image.copy()
-    blurred_image = image.copy()  # Store clean version without boxes
+    blurred_image = image.copy()
     blurred_faces.clear()
 
     image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -35,11 +35,10 @@ def detect_faces(image):
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
     return image_rgb
 
-# Function to toggle blur on selected face
 def toggle_blur_face(image, evt: gr.SelectData, blur_slider_value):
     global detected_faces, original_image, blurred_faces, blurred_image
     if not detected_faces:
-        return image  # No faces detected
+        return image
 
     image = np.array(image)
     image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -75,7 +74,7 @@ def blur_all_faces(image, blur_slider_value):
     global detected_faces, original_image, blurred_faces, blurred_image
 
     if not detected_faces:
-        return image  # No faces to blur
+        return image
 
     image_bgr = cv2.cvtColor(original_image.copy(), cv2.COLOR_RGB2BGR)
     blur_kernel = max(3, (blur_slider_value // 2) * 2 + 1)
@@ -117,7 +116,6 @@ def save_blurred_image():
     global blurred_image
     if blurred_image is None:
         return None
-    # Save the blurred image to a temporary file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
     cv2.imwrite(temp_file.name, cv2.cvtColor(blurred_image, cv2.COLOR_RGB2BGR))
     return temp_file.name
